@@ -5,7 +5,7 @@ from pathlib import Path
 
 import rich_click as click
 
-from nipoppy.env import BIDS_SESSION_PREFIX, BIDS_SUBJECT_PREFIX
+from nipoppy.env import BIDS_SESSION_PREFIX, BIDS_SUBJECT_PREFIX, TELEMETRY_ENV_VAR
 from nipoppy.logger import get_logger
 
 logger = get_logger()
@@ -40,6 +40,11 @@ def dep_params(**params):
     return params
 
 
+def _disable_telemetry(ctx, param, value):
+    if value:
+        os.environ[TELEMETRY_ENV_VAR] = "0"
+
+
 def global_options(func):
     """Define global options for the CLI."""
     func = click.option(
@@ -52,6 +57,13 @@ def global_options(func):
         "--dry-run",
         is_flag=True,
         help="Print commands but do not execute them.",
+    )(func)
+    func = click.option(
+        "--notrack",
+        is_flag=True,
+        expose_value=False,
+        callback=_disable_telemetry,
+        help="Do not send anonymous usage statistics for this run.",
     )(func)
     return func
 

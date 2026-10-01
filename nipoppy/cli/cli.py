@@ -77,6 +77,7 @@ click.rich_click.OPTION_GROUPS = {
             "options": [
                 "--verbose",
                 "--dry-run",
+                "--notrack",
                 "--simulate",
                 "--keep-workdir",
             ],
